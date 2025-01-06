@@ -1,4 +1,4 @@
-package com.atre.movies;
+package com.atre.movies.api;
 
 import com.atre.movies.model.Movie;
 import com.google.gson.*;
@@ -7,16 +7,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class Movies {
 
     private static final Gson gson;
+    private static final int MAX_RESULTS_CAP = 100;
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -52,7 +51,19 @@ public class Movies {
         gson = gsonBuilder.create();
     }
 
+    /**
+     *
+     * @param movieTitle
+     * @param maxResults
+     * @return
+     */
     public static List<Movie> search(String movieTitle, int maxResults) {
+        if (movieTitle == null || movieTitle.isBlank()) {
+            throw new IllegalArgumentException("movieTitle must not be null or empty");
+        }
+        if (maxResults < 1 || maxResults > MAX_RESULTS_CAP) {
+            throw new IllegalArgumentException("maxResults must be between 1 and 100");
+        }
         List<String> movieIds = OmdbClient.search(movieTitle, maxResults);
         if (movieIds.isEmpty()) {
             return Collections.emptyList();

@@ -1,4 +1,4 @@
-package com.atre.movies;
+package com.atre.movies.api;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -14,11 +14,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OmdbClient {
+class OmdbClient {
     private static final RestTemplate restTemplate = new RestTemplate();
     private static final String BASE_URL = "https://www.omdbapi.com/";
-    private static final String API_KEY = "?";
+    private static final String API_KEY = "4638076f";
 
+    /**
+     *
+     * @param movieTitle
+     * @param maxResults
+     * @return
+     */
     public static List<String> search(String movieTitle, int maxResults) {
         // Return IMDB ids of movies matching movieTitle
         List<String> allIds = new ArrayList<>();
@@ -38,6 +44,15 @@ public class OmdbClient {
         }
 
         return allIds;
+    }
+
+    public static String getByImdbId(String imdbId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        String url = String.format("%s?i=%s&apikey=%s", BASE_URL, imdbId, API_KEY);
+        return restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
     }
 
     private static List<String> searchByPage(String movieTitle, int page) {
@@ -67,15 +82,6 @@ public class OmdbClient {
         }
 
         return ids;
-    }
-
-    public static String getByImdbId(String imdbId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        String url = String.format("%s?i=%s&apikey=%s", BASE_URL, imdbId, API_KEY);
-        return restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
     }
 
 //    public static String searchAll(String movieTitle) throws JSONException {
