@@ -2,6 +2,8 @@ package com.atre.movies.api;
 
 import com.atre.movies.model.Movie;
 import com.google.gson.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -12,10 +14,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Service
 public class Movies {
 
     private static final Gson gson;
     private static final int MAX_RESULTS_CAP = 100;
+
+    @Autowired
+    private OmdbClientFactory factory;
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -57,14 +63,15 @@ public class Movies {
      * @param maxResults
      * @return
      */
-    public static List<Movie> search(String movieTitle, int maxResults) {
+    public List<Movie> search(String movieTitle, int maxResults) {
         if (movieTitle == null || movieTitle.isBlank()) {
             throw new IllegalArgumentException("movieTitle must not be null or empty");
         }
         if (maxResults < 1 || maxResults > MAX_RESULTS_CAP) {
             throw new IllegalArgumentException("maxResults must be between 1 and 100");
         }
-        List<String> movieIds = OmdbClient.search(movieTitle, maxResults);
+        OmdbClient omdbClient = factory.getOmdbClient();
+        List<String> movieIds = omdbClient.search(movieTitle, maxResults);
         if (movieIds.isEmpty()) {
             return Collections.emptyList();
         }
@@ -77,7 +84,7 @@ public class Movies {
             CompletableFuture<Movie> future = CompletableFuture.supplyAsync(() -> {
                 String threadName = Thread.currentThread().getName();
                 System.out.println("Thread: " + threadName + ", movieId: " + movieId);
-                String json = OmdbClient.getByImdbId(movieId);
+                String json = omdbClient.getByImdbId(movieId);
                 return gson.fromJson(json, Movie.class);
             }, executor);
 

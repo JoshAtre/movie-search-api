@@ -2,22 +2,24 @@ package com.atre.movies.api;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 class OmdbClient {
-    private static final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
     private static final String BASE_URL = "https://www.omdbapi.com/";
-    private static final String API_KEY = "4638076f";
+    private static final String API_KEY = "?";
 
     /**
      *
@@ -25,7 +27,7 @@ class OmdbClient {
      * @param maxResults
      * @return
      */
-    public static List<String> search(String movieTitle, int maxResults) {
+    public List<String> search(String movieTitle, int maxResults) {
         // Return IMDB ids of movies matching movieTitle
         List<String> allIds = new ArrayList<>();
         int page = 1;
@@ -46,7 +48,7 @@ class OmdbClient {
         return allIds;
     }
 
-    public static String getByImdbId(String imdbId) {
+    public String getByImdbId(String imdbId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -55,7 +57,11 @@ class OmdbClient {
         return restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
     }
 
-    private static List<String> searchByPage(String movieTitle, int page) {
+    public RestTemplate getRestTemplate() {
+        return restTemplate;
+    }
+
+    private List<String> searchByPage(String movieTitle, int page) {
         System.out.println("Calling searchByPage, page = " + page);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -73,7 +79,7 @@ class OmdbClient {
                 return ids;
             }
 
-            JSONArray idsArray = JsonPath.parse(json).read("$.Search..imdbID");
+            List<Object> idsArray = JsonPath.parse(json).read("$.Search..imdbID");
             for (int i = 0; i < idsArray.size(); i++) {
                 ids.add(idsArray.get(i).toString());
             }
