@@ -2,8 +2,10 @@ package com.atre.movies.api;
 
 import com.atre.movies.model.Movie;
 import com.google.gson.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -14,14 +16,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Service
+@Component
+@DependsOn("omdbClientFactory")
+@Slf4j
 public class Movies {
 
     private static final Gson gson;
     private static final int MAX_RESULTS_CAP = 100;
-
-    @Autowired
-    private OmdbClientFactory factory;
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -57,6 +58,13 @@ public class Movies {
         gson = gsonBuilder.create();
     }
 
+    private final OmdbClientFactory omdbClientFactory;
+
+    @Autowired
+    public Movies(OmdbClientFactory omdbClientFactory) {
+        this.omdbClientFactory = omdbClientFactory;
+    }
+
     /**
      *
      * @param movieTitle
@@ -70,7 +78,7 @@ public class Movies {
         if (maxResults < 1 || maxResults > MAX_RESULTS_CAP) {
             throw new IllegalArgumentException("maxResults must be between 1 and 100");
         }
-        OmdbClient omdbClient = factory.getOmdbClient();
+        OmdbClient omdbClient = omdbClientFactory.getOmdbClient();
         List<String> movieIds = omdbClient.search(movieTitle, maxResults);
         if (movieIds.isEmpty()) {
             return Collections.emptyList();

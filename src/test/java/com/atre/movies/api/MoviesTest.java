@@ -7,12 +7,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -22,11 +25,15 @@ class MoviesTest {
 	private static final int VALID_MAX_RESULTS = 5;
 	private static final int INVALID_MAX_RESULTS = 200;
 
-	@InjectMocks
-	private final Movies movies = new Movies();
+	@MockitoBean
+	private OmdbClientFactory omdbClientFactoryMock;
 
 	@Mock
-	private final OmdbClient omdbClientMock = new OmdbClient();
+	private OmdbClient omdbClientMock;
+
+	@InjectMocks
+	@Autowired
+	private Movies movies;
 
 	@Test
 	void testSearchWithNullMovieTitle() {
@@ -65,11 +72,13 @@ class MoviesTest {
 		String movieTitle = "mission";
 		int maxResults = 5;
 
+		Mockito.when(omdbClientFactoryMock.getOmdbClient()).thenReturn(omdbClientMock);
+
 		// Mock OmdbClient to return 5 movie IDs
 		List<String> mockIds = Arrays.asList("tt001", "tt002", "tt003", "tt004", "tt005");
 		Mockito.when(omdbClientMock.search(movieTitle, maxResults)).thenReturn(mockIds);
 
-		Mockito.when(omdbClientMock.getByImdbId("tt0117060")).thenReturn("{\"Title\": \"Mission: Impossible\", " +
+		Mockito.when(omdbClientMock.getByImdbId(any(String.class))).thenReturn("{\"Title\": \"Mission: Impossible\", " +
 						"\"Year\": \"1996\", \"Rated\": \"PG-13\", \"Released\": \"22 May 1996\", \"Runtime\": " +
 						"\"110 min\", \"Genre\": \"Action, Adventure, Thriller\", \"Director\": \"Brian De Palma\", " +
 						"\"Writer\": \"Bruce Geller, David Koepp, Steven Zaillian\", \"Actors\": \"Tom Cruise, " +
@@ -92,19 +101,4 @@ class MoviesTest {
 		assertEquals(maxResults, movieList.size(), "The result list should contain exactly maxResults movies.");
 	}
 
-
-//	@Test
-//	void testMovieSearch() {
-//		String threadName = Thread.currentThread().getName();
-//		System.out.println("Thread in test: " + threadName);
-//		String movieTitle = "jab we met";
-//
-//		int maxResults = 32;
-//		long start = System.nanoTime();
-//		List<Movie> movies = Movies.search(movieTitle, maxResults);
-//		long elapsed = (long) ((System.nanoTime() - start) / 1E6);
-//		System.out.println("Elapsed time = " + elapsed + " ms");
-//		System.out.println(movies);
-//		System.out.println("Number of movies: " + movies.size());
-//	}
 }

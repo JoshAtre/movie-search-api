@@ -1,17 +1,18 @@
 package com.atre.movies.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class OmdbClientFactory {
 
-    @Autowired
-    private ApplicationContext context;
+    private final OmdbClient omdbClient;
+
+    public OmdbClientFactory(OmdbClient omdbClient) {
+        this.omdbClient = omdbClient;
+    }
 
     public OmdbClient getOmdbClient() {
-        return context.getBean(OmdbClient.class);
+        return omdbClient;
     }
 
 }

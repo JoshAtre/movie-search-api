@@ -2,6 +2,7 @@ package com.atre.movies;
 
 import com.atre.movies.api.Movies;
 import com.atre.movies.model.Movie;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +15,8 @@ import java.util.List;
 @RestController
 public class Controller {
 
-    private final Movies movies = new Movies();
+    @Autowired
+    private Movies movies;
 
     @GetMapping(value = "/hello", produces = "text/plain")
     public String hello() {
