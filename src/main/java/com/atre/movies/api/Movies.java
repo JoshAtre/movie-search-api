@@ -3,6 +3,8 @@ package com.atre.movies.api;
 import com.atre.movies.model.Movie;
 import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -18,11 +20,12 @@ import java.util.concurrent.Executors;
 
 @Component
 @DependsOn("omdbClientFactory")
-@Slf4j
 public class Movies {
 
     private static final Gson gson;
     private static final int MAX_RESULTS_CAP = 100;
+
+    private static final Logger logger = LoggerFactory.getLogger(Movies.class);
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -91,7 +94,7 @@ public class Movies {
             // Submit an asynchronous task to call the API
             CompletableFuture<Movie> future = CompletableFuture.supplyAsync(() -> {
                 String threadName = Thread.currentThread().getName();
-                System.out.println("Thread: " + threadName + ", movieId: " + movieId);
+                logger.info("Thread: {}, movieId: {}", threadName, movieId);
                 String json = omdbClient.getByImdbId(movieId);
                 return gson.fromJson(json, Movie.class);
             }, executor);
@@ -105,7 +108,7 @@ public class Movies {
             try {
                 movies.add(future.get());
             } catch (ExecutionException | InterruptedException e) {
-                System.out.println("future.get() failed: " + e.getMessage());
+                logger.error("future.get() failed", e);
             }
         }
         executor.shutdown();

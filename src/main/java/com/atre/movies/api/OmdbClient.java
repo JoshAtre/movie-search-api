@@ -2,6 +2,8 @@ package com.atre.movies.api;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
@@ -21,6 +23,9 @@ class OmdbClient {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "https://www.omdbapi.com/";
     private static final String API_KEY = "?";
+
+    private static final Logger logger = LoggerFactory.getLogger(OmdbClient.class);
+
 
     @Autowired
     public OmdbClient(RestTemplate restTemplate) {
@@ -64,7 +69,7 @@ class OmdbClient {
     }
 
     private List<String> searchByPage(String movieTitle, int page) {
-        System.out.println("Calling searchByPage, page = " + page);
+        logger.info("Calling searchByPage, page = {}", page);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(headers);
