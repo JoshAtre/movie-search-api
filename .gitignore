@@ -1,3 +1,5 @@
+.gradle
+*.log
 HELP.md
 .DS_Store
 target/
