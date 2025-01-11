@@ -1,0 +1,33 @@
+server.error.include-message: always
+
+server.port: 8080
+
+spring:
+  profiles:
+    active: "dev"
+  output:
+    ansi:
+      enabled: always
+app:
+  search.maxresultscap: 5
+  omdb.apikey: ${OMDB_API_KEY}
+
+logging:
+  file.name: application.log
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    ROOT: INFO
+
+---
+
+spring.config.activate.on-profile: dev
+app:
+  search.maxresultscap: 10
+
+---
+
+spring.config.activate.on-profile: prod
+app:
+  search.maxresultscap: 100

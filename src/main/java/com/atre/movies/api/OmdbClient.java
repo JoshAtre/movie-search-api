@@ -5,6 +5,7 @@ import com.jayway.jsonpath.PathNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,8 @@ import java.util.List;
 class OmdbClient {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "https://www.omdbapi.com/";
-    private static final String API_KEY = "?";
+    @Value("${app.omdb.apikey}")
+    private String API_KEY = "";
 
     private static final Logger logger = LoggerFactory.getLogger(OmdbClient.class);
 

@@ -2,10 +2,12 @@ package com.atre.movies.api;
 
 import com.atre.movies.model.Movie;
 import com.google.gson.*;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,9 @@ import java.util.concurrent.Executors;
 public class Movies {
 
     private static final Gson gson;
-    private static final int MAX_RESULTS_CAP = 100;
+
+    @Value("${app.search.maxresultscap}")
+    private int MAX_RESULTS_CAP = 100;
 
     private static final Logger logger = LoggerFactory.getLogger(Movies.class);
 
@@ -68,6 +72,11 @@ public class Movies {
         this.omdbClientFactory = omdbClientFactory;
     }
 
+    @PostConstruct
+    public void init() {
+        logger.info("MAX_RESULTS_CAP = {}", MAX_RESULTS_CAP);
+    }
+
     /**
      *
      * @param movieTitle
@@ -76,10 +85,10 @@ public class Movies {
      */
     public List<Movie> search(String movieTitle, int maxResults) {
         if (movieTitle == null || movieTitle.isBlank()) {
-            throw new IllegalArgumentException("movieTitle must not be null or empty");
+            throw new IllegalArgumentException("movieTitle must not be null or empty\n");
         }
         if (maxResults < 1 || maxResults > MAX_RESULTS_CAP) {
-            throw new IllegalArgumentException("maxResults must be between 1 and 100");
+            throw new IllegalArgumentException("maxResults must be between 1 and " + MAX_RESULTS_CAP + "\n");
         }
         OmdbClient omdbClient = omdbClientFactory.getOmdbClient();
         List<String> movieIds = omdbClient.search(movieTitle, maxResults);
