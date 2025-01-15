@@ -1,4 +1,9 @@
 terraform {
+  backend "gcs" {
+    bucket  = "terraform-state-movies"
+    prefix  = "prod"
+  }
+
   required_providers {
     google = {
       source = "hashicorp/google"
