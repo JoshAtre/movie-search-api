@@ -55,6 +55,12 @@ resource "google_container_cluster" "primary" {
       minimum = 0
       maximum = 2
     }
+
+    resource_limits {
+      resource_type = "memory"
+      minimum = 1
+      maximum = 4
+    }
   }
 }
 
