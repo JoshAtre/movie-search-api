@@ -55,7 +55,7 @@ resource "google_container_cluster" "primary" {
 
 resource "google_service_account" "workload_identity_user_sa" {
   account_id = "terraform-service-account"
-  display_name = "Service account for Workload Identity Federation"
+  display_name = "Service account for Workload Identity Federation for GKE"
 }
 
 resource "google_project_iam_member" "monitoring-role" {
