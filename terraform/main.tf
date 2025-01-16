@@ -36,7 +36,7 @@ resource "google_container_cluster" "primary" {
   initial_node_count = 2
 
   node_config {
-    machine_type = "e2-small"
+    machine_type = "e2-medium"
     disk_size_gb = 10 # Boot size = 10 GB
 
     workload_metadata_config {
@@ -46,22 +46,6 @@ resource "google_container_cluster" "primary" {
 
   network = var.network
   subnetwork = var.subnetwork
-
-#  cluster_autoscaling {
-#    enabled = true
-#
-#    resource_limits {
-#      resource_type = "cpu"
-#      minimum = 0
-#      maximum = 2
-#    }
-#
-#    resource_limits {
-#      resource_type = "memory"
-#      minimum = 1
-#      maximum = 4
-#    }
-#  }
 }
 
 resource "google_service_account" "workload_identity_user_sa" {
