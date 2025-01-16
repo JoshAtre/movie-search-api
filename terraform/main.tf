@@ -36,7 +36,7 @@ resource "google_container_cluster" "primary" {
   initial_node_count = 2
 
   node_config {
-    machine_type = "e2-medium"
+    machine_type = "e2-small"
     disk_size_gb = 10 # Boot size = 10 GB
 
     workload_metadata_config {
@@ -44,8 +44,30 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  cluster_autoscaling {
+    enabled = false
+  }
+
   network = var.network
   subnetwork = var.subnetwork
+}
+
+resource "google_container_node_pool" "default" {
+  name       = "default-pool"
+  cluster    = google_container_cluster.primary.name
+  location   = var.zone
+  initial_node_count = 2
+
+  node_config {
+    machine_type = "e2-small"
+    disk_size_gb = 10
+    preemptible  = false
+  }
+
+  autoscaling {
+    min_node_count = 1
+    max_node_count = 2
+  }
 }
 
 resource "google_service_account" "workload_identity_user_sa" {
