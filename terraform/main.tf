@@ -20,6 +20,12 @@ provider "google" {
 provider "kubernetes" {
   host = google_container_cluster.primary.endpoint
   token = data.google_client_config.current.access_token
+  config_path = "~/.kube/config"
+  load_config_file = false
+  config_context_cluster = "gke_${var.project}_${var.zone}_${google_container_cluster.primary.name}"
+
+  # Increase timeouts
+  client_timeout = "120s"
 }
 
 data "google_client_config" "current" {}
