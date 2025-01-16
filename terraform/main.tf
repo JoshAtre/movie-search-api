@@ -18,10 +18,9 @@ provider "google" {
 }
 
 provider "kubernetes" {
-  host = google_container_cluster.primary.endpoint
+  host = "https://${google_container_cluster.primary.endpoint}"
   token = data.google_client_config.current.access_token
-  config_path = "~/.kube/config"
-  config_context_cluster = "gke_${var.project}_${var.zone}_${google_container_cluster.primary.name}"
+#  config_context_cluster = "gke_${var.project}_${var.zone}_${google_container_cluster.primary.name}"
 }
 
 data "google_client_config" "current" {}
