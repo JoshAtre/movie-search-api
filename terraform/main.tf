@@ -47,21 +47,21 @@ resource "google_container_cluster" "primary" {
   network = var.network
   subnetwork = var.subnetwork
 
-  cluster_autoscaling {
-    enabled = true
-
-    resource_limits {
-      resource_type = "cpu"
-      minimum = 0
-      maximum = 2
-    }
-
-    resource_limits {
-      resource_type = "memory"
-      minimum = 1
-      maximum = 4
-    }
-  }
+#  cluster_autoscaling {
+#    enabled = true
+#
+#    resource_limits {
+#      resource_type = "cpu"
+#      minimum = 0
+#      maximum = 2
+#    }
+#
+#    resource_limits {
+#      resource_type = "memory"
+#      minimum = 1
+#      maximum = 4
+#    }
+#  }
 }
 
 resource "google_service_account" "workload_identity_user_sa" {
