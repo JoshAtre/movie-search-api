@@ -49,6 +49,9 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
 
+      - name: Build the Java application
+        run: ./gradlew build
+
       - name: Configure Docker for Google Artifact Registry
         run: gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
 
