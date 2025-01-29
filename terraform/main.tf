@@ -90,6 +90,7 @@ resource "kubernetes_service_account" "ksa" {
       "iam.gke.io/gcp-service-account" = google_service_account.workload_identity_user_sa.email
     }
   }
+  depends_on = [google_container_cluster.primary]
 }
 
 resource "google_service_account_iam_member" "workload_identity_role" {

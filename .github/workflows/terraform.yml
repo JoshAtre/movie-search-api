@@ -36,7 +36,8 @@ jobs:
         id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          workload_identity_provider: 'projects/89346032191/locations/global/workloadIdentityPools/github-actions-cloud-run/providers/github'
+          workload_identity_provider: 'projects/89346032191/locations/global/workloadIdentityPools/github-actions-
+          cloud-run/providers/github'
           service_account: 'github-cloud-deploy-sa@service-project-dev-1a.iam.gserviceaccount.com'
           token_format: 'access_token'
 
@@ -48,6 +49,19 @@ jobs:
 
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
+
+      - name: Configure Docker for Google Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
+
+      - name: Build Docker Image
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ env.GAR_LOCATION }}-docker.pkg.dev/
+          ${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/movies:${{ github.sha }} .
+
+      - name: Push Docker Image to GAR
+        run: |
+          docker push ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/
+          movies:${{ github.sha }}
 
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a
       # Terraform Cloud user API token
