@@ -89,10 +89,6 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false -var "omdb_api_key=${{ secrets.OMDB_API_KEY }}"
 
-      # Move out of the Terraform directory for Helm steps
-      - name: Move to Helm directory
-        run: cd ../movies-chart
-
       # Install Helm
       - name: Set up Helm
         uses: azure/setup-helm@v1
@@ -100,7 +96,7 @@ jobs:
       # Helm install
       - name: Helm install
         run: |
-          helm upgrade --install movies-chart ./movies-chart \
+          helm upgrade --install movies-chart ../movies-chart \
           --set env.SPRING_PROFILES_ACTIVE=dev \
           --set secrets.omdb_api_key=${{ secrets.OMDB_API_KEY }} \
           --namespace default
