@@ -98,3 +98,13 @@ resource "google_service_account_iam_member" "workload_identity_role" {
   role = "roles/iam.workloadIdentityUser"
   service_account_id = google_service_account.workload_identity_user_sa.name
 }
+
+resource "kubernetes_secret" "movies_secrets" {
+  metadata {
+    name = "movies-secrets"
+  }
+
+  data = {
+    omdb_api_key = var.omdb_api_key
+  }
+}
