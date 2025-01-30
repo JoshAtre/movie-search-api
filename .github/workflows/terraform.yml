@@ -93,11 +93,15 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v1
 
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+
       - name: Set up GKE kubeconfig
         run: |
           gcloud container clusters get-credentials cluster1 --zone us-west2-b --project ${PROJECT_ID}
 
-      - name: Check kubectl connectivity
+      - name: Verify kubectl connection
         run: kubectl get nodes
 
       # Helm install
