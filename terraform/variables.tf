@@ -22,3 +22,9 @@ variable "subnetwork" {
   type = string
   default = "us-west2-subnet"
 }
+
+variable "omdb_api_key" {
+  description = "The OMDB API key"
+  type = string
+  sensitive = true
+}
