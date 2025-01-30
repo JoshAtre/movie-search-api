@@ -95,8 +95,7 @@ jobs:
 
       - name: Set up GKE kubeconfig
         run: |
-          gcloud container clusters get-credentials ${PROJECT_ID} \
-            --zone ${REGION} --project ${PROJECT_ID}
+          gcloud container clusters get-credentials cluster1 --zone us-west2-b --project ${PROJECT_ID}
 
       - name: Check kubectl connectivity
         run: kubectl get nodes
