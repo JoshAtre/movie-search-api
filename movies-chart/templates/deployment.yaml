@@ -24,9 +24,6 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.env.SPRING_PROFILES_ACTIVE }}"
             - name: OMDB_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: movies-secrets
-                  key: omdb_api_key
+              value: "{{ .Values.secrets.omdb_api_key }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
