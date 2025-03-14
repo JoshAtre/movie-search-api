@@ -19,7 +19,6 @@ A web-based application for searching movies by title or actor with relevance-ba
 ## Prerequisites
 - Java 17 (or later)
 - Docker
-- Node.js (for local testing tools like `curl` or `jq`)
 - A valid [OMDB API key](https://www.omdbapi.com/apikey.aspx) (stored as an environment variable)
 - (Optional) Google Cloud SDK (`gcloud`) and Terraform for full infrastructure setup
 
