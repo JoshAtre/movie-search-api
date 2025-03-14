@@ -54,5 +54,5 @@ Since the live deployment is hosted on a private GCP account, you can test the a
 - `.github/workflows/terraform.yml`: GitHub Actions workflow for CI/CD.
 
 ## Notes
-- The live deployment requires a GCP account and credentials for GKE and Google Artifact Registry (GAR). Refer to the full documentation in the repository for cloud setup details.
+- The live deployment requires a GCP account and credentials for GKE and Google Artifact Registry (GAR). See [docs/CLOUD_SETUP.md](docs/CLOUD_SETUP.md) for cloud setup details.
 - For production deployment, update the movies-chart/values.yaml with your GAR image details and secrets.
