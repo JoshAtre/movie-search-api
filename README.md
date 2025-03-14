@@ -29,22 +29,27 @@ Since the live deployment is hosted on a private GCP account, you can test the a
    ```bash
    git clone https://github.com/JoshAtre/movie-search-api.git
    cd movie-search-api
+   ```
 
 2. **Build the Application**
    ```bash
    ./gradlew build
+   ```
 
 3. **Build the Docker Image**
    ```bash
    docker build -t movies .
+   ```
    
 5. **Run the Docker Container**, and replace `<your-api-key>` with your OMDB API key
    ```bash
    docker run -e SPRING_PROFILES_ACTIVE=dev -e OMDB_API_KEY=<your-api-key> -p 8080:8080 movies
+   ```
    
 6. **Test the API** in a separate terminal, query the search endpoint:
    ```bash
    curl -v "http://localhost:8080/search?movieTitle=disciple&maxResults=1"
+   ```
 
 ## Project Structure
 - `src/`: Java source code for the RESTful API.
