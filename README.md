@@ -60,3 +60,4 @@ Since the live deployment is hosted on a private GCP account, you can test the a
 ## Notes
 - The live deployment requires a GCP account and credentials for GKE and Google Artifact Registry (GAR). See [docs/CLOUD_SETUP.md](docs/CLOUD_SETUP.md) for cloud setup details.
 - For production deployment, update the movies-chart/values.yaml with your GAR image details and secrets.
+- For the full, detailed steps on how I configured Terraform and Helm for this application, see [this Notion page](https://evergreen-lantana-f52.notion.site/Configuring-Terraform-and-Helm-for-Movies-Application-17bcda7cd8a8800abb05f3ad0a92c271?pvs=4).
